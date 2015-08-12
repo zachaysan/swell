@@ -22,3 +22,5 @@ droplet_manager.set_droplet_target(2)
 
 deployer = Deployer.new(droplet_manager)
 deployer.instruct_all("date")
+
+droplet_manager.destroy_all_droplets
