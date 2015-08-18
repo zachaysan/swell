@@ -1,4 +1,6 @@
 require "securerandom"
+require "yaml"
+require "openssl"
 
 class DropletManager
 
@@ -43,11 +45,20 @@ class DropletManager
                 "ams3",
                 "fra1"].sample
 
+      key = OpenSSL::PKey::RSA.new(4096)
+      user_data = { "ssh_keys" => { "rsa_private" => key.to_pem,
+          "rsa_public" => key.public_key.to_pem } }
+
+      puts "#cloud-config\n#{user_data.to_yaml}"
+
+      raise
+
       droplet = DropletKit::Droplet.new(name: "#{@task}-#{id}",
                                         region: region,
                                         image: 'ubuntu-14-04-x64',
                                         size: '512mb',
-                                        ssh_keys: [@ssh_key.id])
+                                        ssh_keys: [@ssh_key.id],
+                                        user_data: user_data)
       @client.droplets.create(droplet)
     end
 
