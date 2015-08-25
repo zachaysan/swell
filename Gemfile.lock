@@ -41,12 +41,14 @@ GEM
       coercible (~> 1.0)
       descendants_tracker (~> 0.0, >= 0.0.3)
       equalizer (~> 0.0, >= 0.0.9)
+    yajl (0.2.2)
 
 PLATFORMS
   ruby
 
 DEPENDENCIES
   droplet_kit
+  yajl
 
 BUNDLED WITH
    1.10.3
