@@ -1,3 +1,7 @@
+require "yajl"
+
+$logger = Yajl.create_logger
+
 require 'droplet_kit'
 require 'pp'
 
