@@ -133,8 +133,7 @@ class DropletManager
 
       master_public_key = File.open(filename).read()
 
-      body = { "runcmd" => ["echo hi > /root/america",
-                            "rm /etc/ssh/etc/ssh/ssh_host_ecdsa*",
+      body = { "runcmd" => ["rm /etc/ssh/etc/ssh/ssh_host_ecdsa*",
                             "echo #{private_key} > /tmp/base64_pri && base64 --decode /tmp/base64_pri > /etc/ssh/ssh_host_ecdsa_key",
                             "echo #{public_key} > /tmp/base64_pub && base64 --decode /tmp/base64_pub > /etc/ssh/ssh_host_ecdsa_key.pub",
                             "chmod 600 /etc/ssh/ssh_host_ecdsa_key",
