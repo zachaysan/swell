@@ -1,7 +1,3 @@
-require "yajl"
-
-$logger = Yajl.create_logger
-
 require "securerandom"
 require "yaml"
 require "pp"
