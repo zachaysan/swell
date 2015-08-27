@@ -18,9 +18,13 @@ droplet_manager = DropletManager.new(client,
                                      "testing",
                                      ssh_manager.key)
 
-droplet_manager.set_droplet_target(2)
+droplet_manager.destroy_all_droplets
+
+
+droplet_manager.set_droplet_target(1)
 
 deployer = Deployer.new(droplet_manager)
+
 deployer.instruct_all("date")
 
 droplet_manager.destroy_all_droplets
