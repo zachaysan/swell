@@ -7,7 +7,14 @@ class Secrets
 
   def initialize
 
-    secrets = YAML.load_file("config/secrets.yaml")
+    $logger.info "Loading swell secrets file"
+    path = File.join(File.dirname(__FILE__),
+                     "..",
+                     "..",
+                     "config",
+                     "secrets.yaml")
+
+    secrets = YAML.load_file(path)
     @digital_ocean_key = secrets["digital_ocean"]["key"]
     load_ssh_pub_key(secrets["ssh"]["pub_key_path"])
 
