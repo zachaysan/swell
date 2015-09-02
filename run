@@ -1,2 +1,2 @@
 #!/bin/bash
-ruby lib/swell.rb
+ruby scripts/main.rb
