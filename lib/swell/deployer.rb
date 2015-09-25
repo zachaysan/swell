@@ -6,6 +6,28 @@ class Deployer
     @droplet_manager = droplet_manager
   end
 
+  def rsync(droplet, filename, server_path=nil, log=true)
+    host = "root@#{droplet.networks.v4.first.ip_address}"
+    if log
+      $logger.info({text: "Rsync droplet",
+                    host: host,
+                    filename: filename,
+                    server_path: server_path})
+    end
+
+    server_path ||= "/root/"
+
+    `rsync --rsh='ssh' -av --quiet #{filename} #{host}:#{server_path}`
+
+  end
+
+  def rsync_all(filename, server_path=nil)
+
+    @droplet_manager.droplets.each do |droplet|
+      self.rsync(droplet, filename, server_path, log=true)
+    end
+  end
+
   def instruct_all(message)
     $logger.info({text: "Instructing all droplets",
                   message: message})
@@ -35,7 +57,10 @@ class Deployer
 
     ssh_command = "ssh"
 
+    command = "#{ssh_command} #{host} '#{message}'"
+    output = `#{command}`.chomp
     $logger.info({text: "Command output",
-                  output: `#{ssh_command} #{host} #{message}`.chomp})
+                  server_command: message,
+                  output: output})
   end
 end
