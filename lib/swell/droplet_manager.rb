@@ -4,9 +4,17 @@ require "pp"
 
 require_relative "known_host.rb"
 
+
+
 class DropletManager
 
-  def initialize(client, task, ssh_key)
+  attr_accessor :droplet_install_script, :post_install_script
+
+  def initialize( client,
+                  task,
+                  ssh_key,
+                  install_script: nil,
+                  post_install_script: nil )
 
     @client = client
     @task = task.to_s
@@ -21,6 +29,10 @@ class DropletManager
     @delay_until = 0
     self.increment_delay(2)
 
+    @installed_droplets = Set.new
+    @install_script = install_script
+    @post_install_script = post_install_script
+
     @deleted_droplets = []
   end
 
@@ -32,7 +44,8 @@ class DropletManager
     @delay_until = [@delay_until, Time.now.to_f + amount].max
   end
 
-  def droplets(wait_on_new_droplets=true)
+  def droplets(wait_on_new_droplets=true,
+               activate_installation=false)
     self.delay
 
     droplets = @client.droplets.all.select do |droplet|
@@ -51,15 +64,38 @@ class DropletManager
                    })
 
       increment_delay(3)
-      return self.droplets
 
+      return self.droplets
     else
 
-      $logger.info({ text: "Waiting on droplet activation",
+      $logger.info({ text: "All droplets active",
                      droplets: droplets
                        .map { |d| { name: d.name,
                                     status: d.status } }
                    })
+
+
+      return droplets unless activate_installation
+      raise "Not finished implementation"
+      # NOTE: I'm too busy to finish this right now. I'm sorry.
+
+      droplets.each do |droplet|
+        unless @installed_droplets.include? droplet.name
+          $logger.info({ text: "Installation initiated",
+                         droplet: { name: droplet.name }
+                       })
+
+          host = "root@#{droplet.networks.v4.first.ip_address}"
+
+          ssh_command = "ssh"
+
+          output = `#{ssh_command} #{host} #{message}`.chomp
+
+          $logger.info({text: "Command output",
+                        output: output})
+        end
+        @installed_droplets.add(d.name)
+      end
 
       droplets
     end
