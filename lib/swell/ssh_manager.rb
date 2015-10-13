@@ -16,7 +16,10 @@ class SSHManager
     raise "Empty key not allowed" if pub_key.blank?
 
     @client.ssh_keys.all.each do |key|
-      @key = key and return if key.public_key.chomp == pub_key
+      if key.public_key.chomp == pub_key
+        @key = key
+        return
+      end
 
       # If a key has been deleted by our host we delete it from
       # the acceptable key list in order to minimize the
