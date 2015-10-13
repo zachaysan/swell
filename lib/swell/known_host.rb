@@ -24,6 +24,7 @@ class KnownHost
                             ".ssh",
                             "known_hosts")
     line = self.to_s
+
     open(known_hosts, 'a') do |f|
       f.puts line
     end
