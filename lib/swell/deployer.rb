@@ -24,7 +24,7 @@ class Deployer
   def rsync_all(filename, server_path=nil)
 
     @droplet_manager.droplets.each do |droplet|
-      self.rsync(droplet, filename, server_path, log=true)
+      self.rsync(droplet, filename, server_path, log=false)
     end
   end
 
